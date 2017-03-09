@@ -31,17 +31,35 @@ v.01.03 (3/8/17)
 -Decrease BorderThickness on RichEditBox to 1
 -Add MenuFlyOut to each menu button with options
 	-fix positioning of menu Button Flyouts
--Connect GitHub to project
+-Connect GitHub to projectd
 -add basic event functionality for New button
 
 
+v.01.04 (3/9/17)
+
+-add file open functionality
+-add file save functionality
+-add file close functionality
+-add save as functionality
+-added About button functionailty MessageDialog
+-add a boolean to see whether the text has been changed (should we ask for open/new to save?)
+	-was not working correctly when under TextChanged event so I moved it to KeyPressed event
+-add a boolean to check if current file is saved
+-add a check to see if you want to save after clicking New using MessageDialog
+-add a check to see if you want to save aftder clicking Open using MessageDialog
+-change background color of Menu Buttons
+-change background color of App TitleBar
+-decrease menu button padding
+-use RichEditBox's ScrollView instead of using an wrapper ScrollView
+	-Make it so text view scrolls automatically with ScrollViewer as you type (solved by above)
+	-collapse text down to remain on screen when you resize from large to small (solved by above)
+	
+
 Next:
 
--****add file open functionality
--****add file save functionality
--****add a check to see if you want to save after clicking New
--**** Change background color of Menu Buttons
--****decrease menuflyout padding??
--****Make it so text view scrolls automatically with ScrollViewer as you type
--****collapse text down to remain on screen when you resize from large to small
-		-****figure out how to integrate this (and word wrap) with the InkCanvas
+-****show current open/saved filename on top bar
+-****fix text formatting on saving then loading the same file
+-****debug the menu options and load/save
+-****add a check to see if you want to save after clicking Close using MessageDialog
+-****add a check to see if you should just save or open save file picker
+-****figure out how to integrate scrolling (and word wrap) with the InkCanvas

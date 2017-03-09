@@ -13,20 +13,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0">
-            <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked">
+        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0" Background="WhiteSmoke">
+            <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked" Padding="3,1" Background="WhiteSmoke">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="New" Click="NewClicked" />
-                        <MenuFlyoutItem Text="Open..." />
-                        <MenuFlyoutItem Text="Save" />
-                        <MenuFlyoutItem Text="Save As..." />
+                        <MenuFlyoutItem Text="Open..." Click="OpenClicked" />
+                        <MenuFlyoutItem Text="Save" Click="SaveClicked" />
+                        <MenuFlyoutItem Text="Save As..." Click="SaveAsClicked" />
+                        <MenuFlyoutItem Text="Close" Click="CloseClicked" />
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Text="Exit" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
-            <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked">
+            <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked" Padding="3,1" Background="WhiteSmoke">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="Undo" />
@@ -39,38 +40,38 @@
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
-            <Button x:Name="FormatButton" Content="Format" Click="MenuButtonClicked">
+            <Button x:Name="FormatButton" Content="Format" Click="MenuButtonClicked" Padding="3,1" Background="WhiteSmoke">
            
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
-                       
-                        <MenuFlyout.MenuFlyoutPresenterStyle>
-                            <Style TargetType="MenuFlyoutPresenter">
-                               
-                            </Style>
-                        </MenuFlyout.MenuFlyoutPresenterStyle>
                         <MenuFlyoutItem Text="Font" />
                     </MenuFlyout>
                 </Button.Flyout>
             
                 
             </Button>
-            <Button x:Name="HelpButton" Content="Help" Click="MenuButtonClicked">
-             
+            <Button x:Name="HelpButton" Content="Help" Click="MenuButtonClicked" Padding="3,1" Background="WhiteSmoke">
+               
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem Text="About" />
+                        <MenuFlyoutItem Text="About" Click="AboutClicked" />
                     </MenuFlyout>
                 </Button.Flyout>
          
             </Button>
         </StackPanel>
-       
-       <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" Grid.Row="1">
-               <RichEditBox x:Name="MainTextBox" FontFamily="Consolas" FontSize="14" IsSpellCheckEnabled="False" BorderThickness="1" KeyDown="TabKeyDown" />  
-
-        </ScrollViewer>
-
+   
+        <RichEditBox x:Name="MainTextBox"
+                     Grid.Row="1"
+                     FontFamily="Consolas" 
+                     FontSize="14" 
+                     IsSpellCheckEnabled="False" 
+                     BorderThickness="1" 
+                     ScrollViewer.IsVerticalRailEnabled="True"
+                     ScrollViewer.VerticalScrollMode="Auto"
+                     ScrollViewer.IsHorizontalRailEnabled="True"
+                     ScrollViewer.HorizontalScrollMode="Auto"
+                     KeyDown="TabKeyDown" />
 
     </Grid>
 </Page>

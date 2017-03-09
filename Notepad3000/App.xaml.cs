@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,21 @@ namespace Notepad3000
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
+        /// 
+
+        public bool appFinishedLoading = false;
+
+        //Custom method for setting the main TitleBar color
+        private void SetBackgroundTitleBar()
+        {
+            var appview = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            var titleBar = appview.TitleBar;
+            titleBar.BackgroundColor = Colors.DimGray;
+            titleBar.ForegroundColor = Colors.WhiteSmoke;
+            titleBar.ButtonBackgroundColor = Colors.DimGray;
+            titleBar.ButtonForegroundColor = Colors.WhiteSmoke;
+        }
+
         public App()
         {
             this.InitializeComponent();
@@ -39,6 +55,8 @@ namespace Notepad3000
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+
+            SetBackgroundTitleBar();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -71,7 +89,9 @@ namespace Notepad3000
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+                
             }
+            appFinishedLoading = true;
         }
 
         /// <summary>
