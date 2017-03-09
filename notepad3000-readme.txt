@@ -1,5 +1,8 @@
 Notepad3000
 
+Legend:
+**** = planned feature/fix for next release/commit
+
 v.01.01
 
 -UWP App
@@ -22,13 +25,23 @@ v.01.02 (3/7/2017)
 	-Right ScrollBar to Visible
 	
 
-v.01.03
+v.01.03 (3/8/17)
 
--**** Change Tab key in RichEditBox to insert a tab instead of tabbing through controls
--**** Remove Border from RichEditBox
+-Change Tab key in RichEditBox to insert a tab instead of tabbing through controls
+-Decrease BorderThickness on RichEditBox to 1
+-Add MenuFlyOut to each menu button with options
+	-fix positioning of menu Button Flyouts
+-Connect GitHub to project
+-add basic event functionality for New button
+
+
+Next:
+
+-****add file open functionality
+-****add file save functionality
+-****add a check to see if you want to save after clicking New
 -**** Change background color of Menu Buttons
--****Add MenuFlyOut to each menu button with options
+-****decrease menuflyout padding??
 -****Make it so text view scrolls automatically with ScrollViewer as you type
--****Connect GitHub to project
 -****collapse text down to remain on screen when you resize from large to small
 		-****figure out how to integrate this (and word wrap) with the InkCanvas

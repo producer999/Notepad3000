@@ -27,6 +27,30 @@ namespace Notepad3000
             this.InitializeComponent();
         }
 
-  //this mike 3
+        private void TabKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Tab)
+            {
+                var reb = (RichEditBox)sender;
+                //string selectedText = "";
+
+                e.Handled = true;
+                // reb.Document.Selection.GetText(Windows.UI.Text.TextGetOptions.None, selectedText);
+                reb.Document.Selection.TypeText("\t");
+            }
+        }
+
+        private void MenuButtonClicked(object sender, RoutedEventArgs e)
+        {
+            var menu = (Button)sender;
+            var fly = (MenuFlyout)menu.Flyout;
+
+            fly.ShowAt(menu, new Point(0, menu.ActualHeight));
+        }
+
+        private void NewClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None,"");
+        }
     }
 }
