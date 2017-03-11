@@ -40,6 +40,16 @@ namespace Notepad3000
             this.InitializeComponent();
         }
 
+        public async Task<bool> Confirm(string content, string title, string ok)
+        {
+            bool result = false;
+            MessageDialog dialog = new MessageDialog(content, title);
+            dialog.Commands.Add(new UICommand(ok, new UICommandInvokedHandler((cmd) => result = true)));
+            await dialog.ShowAsync();
+            return result;
+
+        }
+
         public async Task<bool> Confirm(string content, string title, string ok, string cancel)
         {
             bool result = false;
@@ -50,14 +60,45 @@ namespace Notepad3000
             return result;
 
         }
-        public async Task<bool> Confirm(string content, string title, string ok)
+        public async Task<string> Confirm(string content, string title, string save, string dontsave, string cancel)
         {
-            bool result = false;
+            string result = "";
             MessageDialog dialog = new MessageDialog(content, title);
-            dialog.Commands.Add(new UICommand(ok, new UICommandInvokedHandler((cmd) => result = true)));
+            dialog.Commands.Add(new UICommand(save, new UICommandInvokedHandler((cmd) => result = "save")));
+            dialog.Commands.Add(new UICommand(dontsave, new UICommandInvokedHandler((cmd) => result = "dontsave")));
+            dialog.Commands.Add(new UICommand(cancel, new UICommandInvokedHandler((cmd) => result = "cancel")));
             await dialog.ShowAsync();
             return result;
 
+        }
+
+        public async Task<bool> OpenFile()
+        {
+            try
+            {
+                FileOpenPicker picker = new FileOpenPicker();
+                picker.SuggestedStartLocation = PickerLocationId.Desktop;
+                picker.FileTypeFilter.Add(".txt");
+                StorageFile file = await picker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, await FileIO.ReadTextAsync(file));
+                    textChanged = false;
+                    CurrentFile = file;
+                    isCurrentFileSaved = true;
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                await Confirm("Error in opening file.\n\nOpenFile()", "Something went wrong.", "OK");
+                return false;
+            }
         }
 
         public async void SaveCurrentFile()
@@ -69,7 +110,7 @@ namespace Notepad3000
                     CachedFileManager.DeferUpdates(CurrentFile);
 
                     string text = "";
-                    MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
+                    MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out text);
 
                     await FileIO.WriteTextAsync(CurrentFile, text);
                     FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(CurrentFile);
@@ -77,14 +118,61 @@ namespace Notepad3000
                     isCurrentFileSaved = true;
                     textChanged = false;
                 }
-                catch
+                catch(Exception ex)
                 {
-                    await Confirm("Error in saving file.", "Something went wrong.", "OK");
+                    string exception = ex.ToString();
+                    await Confirm("Error in saving file.\n\nSaveCurrentFile()\n\n" + exception, "Something went wrong.", "OK");
+
                 }
             }
         }
 
-       private void TabKeyDown(object sender, KeyRoutedEventArgs e)
+        public async Task<bool> SaveNewFile()
+        {
+            if (CurrentFile == null && isCurrentFileSaved == false)
+            {
+                try
+                {
+                    FileSavePicker picker = new FileSavePicker();
+                    picker.SuggestedStartLocation = PickerLocationId.Desktop;
+                    picker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
+                    picker.DefaultFileExtension = ".txt";
+                    picker.SuggestedFileName = "Document";
+
+                    StorageFile file = await picker.PickSaveFileAsync();
+
+                   
+
+                    if (file != null)
+                    {
+                        CachedFileManager.DeferUpdates(file);
+
+                        string text = "";
+                        MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out text);
+
+                        await FileIO.WriteTextAsync(file, text);
+                        FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+
+                        isCurrentFileSaved = true;
+                        textChanged = false;
+                        CurrentFile = file;
+
+                        return true;
+                    }
+                    return false; 
+                }
+                catch
+                {
+                    return await Confirm("Error in saving file.\n\nSaveNewFile()", "Something went wrong.", "OK");
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void TabKeyDown(object sender, KeyRoutedEventArgs e)
        {
             textChanged = true;
             isCurrentFileSaved = false;
@@ -110,34 +198,59 @@ namespace Notepad3000
 
         private async void NewClicked(object sender, RoutedEventArgs e)
         {
-            if (textChanged == true)
+            try
             {
-                if (await Confirm("Create New Document? (current changes will be lost)", "Notepad3000", "Yes", "No"))
+                if (isCurrentFileSaved == false && textChanged == true)
                 {
-                    MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
-                    textChanged = false;
-                    isCurrentFileSaved = false;
-                    CurrentFile = null;
+                    string result = await Confirm("Do you want to save the current file?", "File not saved - Save changes?", "Save", "Don't Save", "Cancel");
+
+                    if (result == "save")
+                    {
+                        if (CurrentFile != null)
+                        {
+                            SaveCurrentFile();
+
+                            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                            textChanged = false;
+                            isCurrentFileSaved = false;
+                            CurrentFile = null;
+                        }
+                        else
+                        {
+                            if (await SaveNewFile())
+                            {
+                                MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                                textChanged = false;
+                                isCurrentFileSaved = false;
+                                CurrentFile = null;
+                            }
+                        }
+                    }
+                    else if (result == "dontsave")
+                    {
+                        MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                        textChanged = false;
+                        isCurrentFileSaved = false;
+                        CurrentFile = null;
+                    }
+                    else
+                    {
+
+                    }
+
                 }
-               /* 
                 else
                 {
                     MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
-                    textChanged = false;
                     isCurrentFileSaved = false;
+                    textChanged = false;
                     CurrentFile = null;
                 }
-                */
             }
-            else
+            catch
             {
-                MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
-                isCurrentFileSaved = false;
-                textChanged = false;
-                CurrentFile = null;
-            }
-            
-
+                await Confirm("Error in creting new file.\n\nNewClicked()", "Something went wrong.", "OK");
+            }     
         }
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
@@ -149,37 +262,65 @@ namespace Notepad3000
         {
             try
             {
-                FileOpenPicker picker = new FileOpenPicker();
-                picker.SuggestedStartLocation = PickerLocationId.Desktop;
-                picker.FileTypeFilter.Add(".txt");
-                StorageFile file = await picker.PickSingleFileAsync();
-                if(file != null)
+                if(isCurrentFileSaved == false && textChanged == true)
                 {
-                    MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, await FileIO.ReadTextAsync(file));
-                    textChanged = false;
-                    CurrentFile = file;
-                    isCurrentFileSaved = false;
+                    string result = await Confirm("Do you want to save the current file?", "File not saved - Save changes?", "Save", "Don't Save", "Cancel");
+
+                    if (result == "save")
+                    {
+                        if (CurrentFile != null)
+                        {
+                            SaveCurrentFile();
+
+                            await OpenFile();
+                        }
+                        else
+                        {
+                            if (await SaveNewFile())
+                            {
+                                await OpenFile();
+                            }
+                        }
+                    }
+                    else if (result == "dontsave") 
+                    {
+                        await OpenFile();
+                    }
+                    else
+                    {
+
+                    }                   
+                }
+                else
+                {
+                    await OpenFile();
                 }
             }
             catch
             {
-                await Confirm("Error in opening file.", "Something went wrong.", "OK");
+                await Confirm("Error in opening file.\n\nOpenClicked()", "Something went wrong.", "OK");
             }
         }
 
-       /* private void MainTextBox_TextChanged(object sender, RoutedEventArgs e)
-        {
-           
-        }*/
-
         private async void CloseClicked(object sender, RoutedEventArgs e)
         {
-            if (await Confirm("Close the Document?", "Notepad3000", "Yes", "No"))
+            if (textChanged == true && isCurrentFileSaved == false)
+            {
+
+                if (await Confirm("Close the Document? (your changes will be lost)", "Notepad3000", "Yes", "No"))
+                {
+                    MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                    textChanged = false;
+                    CurrentFile = null;
+                    isCurrentFileSaved = false;
+                }
+            }
+            else
             {
                 MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                isCurrentFileSaved = false;
                 textChanged = false;
                 CurrentFile = null;
-                isCurrentFileSaved = false;
             }
         }
 
@@ -189,29 +330,7 @@ namespace Notepad3000
             {
                 if (textChanged == true && isCurrentFileSaved == false && CurrentFile == null)
                 {
-
-
-                    FileSavePicker picker = new FileSavePicker();
-                    picker.SuggestedStartLocation = PickerLocationId.Desktop;
-                    picker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
-                    picker.DefaultFileExtension = ".txt";
-                    picker.SuggestedFileName = "Document";
-
-                    StorageFile file = await picker.PickSaveFileAsync();
-
-                    if (file != null)
-                    {
-                        CachedFileManager.DeferUpdates(file);
-
-                        string text = "";
-                        MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
-
-                        await FileIO.WriteTextAsync(file, text);
-                        FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                        isCurrentFileSaved = true;
-                        textChanged = false;
-                        CurrentFile = file;
-                    }
+                    await SaveNewFile();
                 }
                 else
                 {
@@ -219,12 +338,16 @@ namespace Notepad3000
                     {
                         SaveCurrentFile();
                     }
+                    else
+                    {
+                        await SaveNewFile();
+                    }
                 }
 
             }
             catch
             {
-                await Confirm("Error in saving file.", "Something went wrong.", "OK");
+                await Confirm("Error in saving file.\n\nSaveClicked()", "Something went wrong.", "OK");
             }
         }
 
@@ -246,7 +369,7 @@ namespace Notepad3000
                         CachedFileManager.DeferUpdates(file);
 
                         string text = "";
-                        MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
+                        MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out text);
 
                         await FileIO.WriteTextAsync(file, text);
                         FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
@@ -258,7 +381,7 @@ namespace Notepad3000
             }
             catch
             {
-                await Confirm("Error in saving file.", "Something went wrong.", "OK");
+                await Confirm("Error in saving file.\n\nSaveAsClicked()", "Something went wrong.", "OK");
             }
         }
 

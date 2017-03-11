@@ -55,11 +55,31 @@ v.01.04 (3/9/17)
 	-collapse text down to remain on screen when you resize from large to small (solved by above)
 	
 
-Next:
+v0.01.05 (3/10/2017)
 
 -****show current open/saved filename on top bar
--****fix text formatting on saving then loading the same file
+-fix text formatting on saving then loading the same file by using TextGetOptions.UseCrlf on save
 -****debug the menu options and load/save
+-create 3-way message dialog and proper checks, return Task<string> instead of Task<bool> in async
+-add a check to see if you want to save after clicking Open using MessageDialog
 -****add a check to see if you want to save after clicking Close using MessageDialog
--****add a check to see if you should just save or open save file picker
+-add a check to see if you want to save after clicking New using MessageDialog
+-****add a check to see if you want to save after exiting using MessageDialog
+-add a check to see if you should just save or open save file picker
 -****figure out how to integrate scrolling (and word wrap) with the InkCanvas
+-****create keyboard shortcuts for save, select all, close file, close program
+
+
+
+BUGS:
+
+Potentially Fixed Bug: New -> type -> New -> Save -> Cancel
+	result: clears text anyway
+	expected: leaves text intact, textChanged = true, file = null, isCurrentFileSaved = false
+	potentially fixed: v0.01.05
+	fixed: 
+
+Bug: New -> Open -> choose a file -> type text -> New -> Save
+	result: exception, text clears, file saves
+	expected: no exception
+	info: New -> Open -> choose a file -> type text -> Open -> Save does not throw exception
