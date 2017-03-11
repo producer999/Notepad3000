@@ -36,9 +36,11 @@ namespace Notepad3000
         {
             var appview = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
             var titleBar = appview.TitleBar;
-            titleBar.BackgroundColor = Colors.DimGray;
+
+            appview.Title = "Untitled" + MainPage.isCurrentFileSavedString;
+            titleBar.BackgroundColor = Colors.DarkSlateBlue;
             titleBar.ForegroundColor = Colors.WhiteSmoke;
-            titleBar.ButtonBackgroundColor = Colors.DimGray;
+            titleBar.ButtonBackgroundColor = Colors.DarkSlateBlue;
             titleBar.ButtonForegroundColor = Colors.WhiteSmoke;
         }
 

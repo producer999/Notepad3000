@@ -32,12 +32,29 @@ namespace Notepad3000
         public bool textChanged = false;
         public bool isCurrentFileSaved = false;
 
+        public bool isCtrlKeyPressed = false;
+
+        public static string isCurrentFileSavedString = "";
+
         StorageFile CurrentFile = null;
 
 
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        public void updateTitle()
+        {
+            var appview = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            if (CurrentFile == null)
+            {
+                appview.Title = "Untitled" + isCurrentFileSavedString;
+            }
+            else
+            {
+                appview.Title = CurrentFile.Path + isCurrentFileSavedString;
+            }
         }
 
         public async Task<bool> Confirm(string content, string title, string ok)
@@ -86,6 +103,9 @@ namespace Notepad3000
                     textChanged = false;
                     CurrentFile = file;
                     isCurrentFileSaved = true;
+                    isCurrentFileSavedString = "";
+                    updateTitle();
+                    
 
                     return true;
                 }
@@ -101,7 +121,7 @@ namespace Notepad3000
             }
         }
 
-        public async void SaveCurrentFile()
+        public async Task<bool> SaveCurrentFile()
         {
             if(CurrentFile != null && isCurrentFileSaved == false)
             {
@@ -117,13 +137,22 @@ namespace Notepad3000
 
                     isCurrentFileSaved = true;
                     textChanged = false;
+                    isCurrentFileSavedString = "";
+                    updateTitle();
+
+                    return true;
                 }
                 catch(Exception ex)
                 {
                     string exception = ex.ToString();
                     await Confirm("Error in saving file.\n\nSaveCurrentFile()\n\n" + exception, "Something went wrong.", "OK");
 
+                    return false;
                 }
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -156,6 +185,8 @@ namespace Notepad3000
                         isCurrentFileSaved = true;
                         textChanged = false;
                         CurrentFile = file;
+                        isCurrentFileSavedString = "";
+                        updateTitle();
 
                         return true;
                     }
@@ -174,17 +205,34 @@ namespace Notepad3000
 
         private void TabKeyDown(object sender, KeyRoutedEventArgs e)
        {
-            textChanged = true;
-            isCurrentFileSaved = false;
-
-            if (e.Key == Windows.System.VirtualKey.Tab)
+            if (e.Key != Windows.System.VirtualKey.Control && e.Key != Windows.System.VirtualKey.Shift && !isCtrlKeyPressed)
             {
-                var reb = (RichEditBox)sender;
-                //string selectedText = "";
+                
+                if (e.Key == Windows.System.VirtualKey.Tab)
+                {
+                    var reb = (RichEditBox)sender;
+                    reb.Document.Selection.TypeText("\t");
 
-                e.Handled = true;
-                // reb.Document.Selection.GetText(Windows.UI.Text.TextGetOptions.None, selectedText);
-                reb.Document.Selection.TypeText("\t");
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+
+                    e.Handled = true;
+                }
+                else
+                {
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+                }
             }
         }
 
@@ -208,12 +256,14 @@ namespace Notepad3000
                     {
                         if (CurrentFile != null)
                         {
-                            SaveCurrentFile();
+                            await SaveCurrentFile();
 
                             MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
                             textChanged = false;
                             isCurrentFileSaved = false;
                             CurrentFile = null;
+                            isCurrentFileSavedString = "";
+                            updateTitle();
                         }
                         else
                         {
@@ -223,6 +273,8 @@ namespace Notepad3000
                                 textChanged = false;
                                 isCurrentFileSaved = false;
                                 CurrentFile = null;
+                                isCurrentFileSavedString = "";
+                                updateTitle();
                             }
                         }
                     }
@@ -232,6 +284,8 @@ namespace Notepad3000
                         textChanged = false;
                         isCurrentFileSaved = false;
                         CurrentFile = null;
+                        isCurrentFileSavedString = "";
+                        updateTitle();
                     }
                     else
                     {
@@ -245,6 +299,8 @@ namespace Notepad3000
                     isCurrentFileSaved = false;
                     textChanged = false;
                     CurrentFile = null;
+                    isCurrentFileSavedString = "";
+                    updateTitle();
                 }
             }
             catch
@@ -255,7 +311,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.01.04 3/9/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.01.05 3/10/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
@@ -270,7 +326,7 @@ namespace Notepad3000
                     {
                         if (CurrentFile != null)
                         {
-                            SaveCurrentFile();
+                            await SaveCurrentFile();
 
                             await OpenFile();
                         }
@@ -304,23 +360,66 @@ namespace Notepad3000
 
         private async void CloseClicked(object sender, RoutedEventArgs e)
         {
-            if (textChanged == true && isCurrentFileSaved == false)
+            try
             {
+                if (isCurrentFileSaved == false && textChanged == true)
+                {
+                    string result = await Confirm("Do you want to save the current file?", "File not saved - Save changes?", "Save", "Don't Save", "Cancel");
 
-                if (await Confirm("Close the Document? (your changes will be lost)", "Notepad3000", "Yes", "No"))
+                    if (result == "save")
+                    {
+                        if (CurrentFile != null)
+                        {
+                            await SaveCurrentFile();
+
+                            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                            textChanged = false;
+                            isCurrentFileSaved = false;
+                            CurrentFile = null;
+                            isCurrentFileSavedString = "";
+                            updateTitle();
+                        }
+                        else
+                        {
+                            if (await SaveNewFile())
+                            {
+                                MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                                textChanged = false;
+                                isCurrentFileSaved = false;
+                                CurrentFile = null;
+                                isCurrentFileSavedString = "";
+                                updateTitle();
+                            }
+                        }
+                    }
+                    else if (result == "dontsave")
+                    {
+                        MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                        textChanged = false;
+                        isCurrentFileSaved = false;
+                        CurrentFile = null;
+                        isCurrentFileSavedString = "";
+                        updateTitle();
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+                else
                 {
                     MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                    isCurrentFileSaved = false;
                     textChanged = false;
                     CurrentFile = null;
-                    isCurrentFileSaved = false;
+                    isCurrentFileSavedString = "";
+                    updateTitle();
                 }
             }
-            else
+            catch
             {
-                MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
-                isCurrentFileSaved = false;
-                textChanged = false;
-                CurrentFile = null;
+                await Confirm("Error in closing file.\n\nCloseClicked()", "Something went wrong.", "OK");
             }
         }
 
@@ -336,7 +435,7 @@ namespace Notepad3000
                 {
                     if(CurrentFile != null)
                     {
-                        SaveCurrentFile();
+                        await SaveCurrentFile();
                     }
                     else
                     {
@@ -376,6 +475,9 @@ namespace Notepad3000
                         isCurrentFileSaved = true;
                         textChanged = false;
                         CurrentFile = file;
+                        isCurrentFileSavedString = "";
+                        updateTitle();
+
                     }
                 
             }
@@ -385,8 +487,81 @@ namespace Notepad3000
             }
         }
 
-      
+        private async void KeyPressed(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Control)
+            {
+                isCtrlKeyPressed = true;
+            }
+            else if (isCtrlKeyPressed)
+            {
+                if (e.Key == Windows.System.VirtualKey.S)
+                {
+                    if(CurrentFile != null)
+                    {
+                        await SaveCurrentFile();
+                    }
+                    else
+                    {
+                        await SaveNewFile();
+                    }
+                }
+            }   
+        }
 
-       
+        private void KeyLifted(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Control)
+            {
+                isCtrlKeyPressed = false;
+            }
+        }
+
+        private async void ExitClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (isCurrentFileSaved == false && textChanged == true)
+                {
+                    string result = await Confirm("Do you want to save the current file?", "File not saved - Save changes?", "Save", "Don't Save", "Cancel");
+
+                    if (result == "save")
+                    {
+                        if (CurrentFile != null)
+                        {
+                            await SaveCurrentFile();
+
+                            Application.Current.Exit();
+                        }
+                        else
+                        {
+                            if (await SaveNewFile())
+                            {
+                                Application.Current.Exit();
+                            }
+                        }
+                    }
+                    else if (result == "dontsave")
+                    {
+                        Application.Current.Exit();
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+                else
+                {
+                    Application.Current.Exit();
+                }
+            }
+            catch
+            {
+                await Confirm("Error in closing application.\n\nExitClicked()", "Something went wrong.", "OK");
+                Application.Current.Exit();
+            }
+            
+        }
     }
 }
