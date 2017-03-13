@@ -42,6 +42,8 @@ namespace Notepad3000
         public MainPage()
         {
             this.InitializeComponent();
+
+          
         }
 
         public void updateTitle()
@@ -117,6 +119,81 @@ namespace Notepad3000
             catch
             {
                 await Confirm("Error in opening file.\n\nOpenFile()", "Something went wrong.", "OK");
+                return false;
+            }
+        }
+
+        public async Task<bool> CloseFile()
+        {
+            try
+            {
+                if (isCurrentFileSaved == false && textChanged == true)
+                {
+                    string result = await Confirm("Do you want to save the current file?", "File not saved - Save changes?", "Save", "Don't Save", "Cancel");
+
+                    if (result == "save")
+                    {
+                        if (CurrentFile != null)
+                        {
+                            await SaveCurrentFile();
+
+                            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                            textChanged = false;
+                            isCurrentFileSaved = false;
+                            CurrentFile = null;
+                            isCurrentFileSavedString = "";
+                            updateTitle();
+
+                            return true;
+                        }
+                        else
+                        {
+                            if (await SaveNewFile())
+                            {
+                                MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                                textChanged = false;
+                                isCurrentFileSaved = false;
+                                CurrentFile = null;
+                                isCurrentFileSavedString = "";
+                                updateTitle();
+
+                                return true;
+                            }
+                        }
+                    }
+                    else if (result == "dontsave")
+                    {
+                        MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                        textChanged = false;
+                        isCurrentFileSaved = false;
+                        CurrentFile = null;
+                        isCurrentFileSavedString = "";
+                        updateTitle();
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+                    isCurrentFileSaved = false;
+                    textChanged = false;
+                    CurrentFile = null;
+                    isCurrentFileSavedString = "";
+                    updateTitle();
+
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                await Confirm("Error in closing file.\n\nCloseFile()", "Something went wrong.", "OK");
                 return false;
             }
         }
@@ -234,6 +311,10 @@ namespace Notepad3000
                     }
                 }
             }
+            else if (e.Key == Windows.System.VirtualKey.Control)
+            {
+                isCtrlKeyPressed = true;
+            }
         }
 
         private void MenuButtonClicked(object sender, RoutedEventArgs e)
@@ -311,7 +392,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.01.05 3/10/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.02.01 3/12/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
@@ -459,7 +540,16 @@ namespace Notepad3000
                     picker.SuggestedStartLocation = PickerLocationId.Desktop;
                     picker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
                     picker.DefaultFileExtension = ".txt";
-                    picker.SuggestedFileName = "Document";
+
+                    if(CurrentFile != null)
+                    {
+                    picker.SuggestedFileName = CurrentFile.Name;
+                    }
+                    else
+                    {
+                        picker.SuggestedFileName = "Document";
+                    }
+                    
 
                     StorageFile file = await picker.PickSaveFileAsync();
 
@@ -504,7 +594,75 @@ namespace Notepad3000
                     else
                     {
                         await SaveNewFile();
+                        isCtrlKeyPressed = false;
                     }
+                }
+                else if(e.Key == Windows.System.VirtualKey.D)
+                {
+                    MainTextBox.Document.Selection.SetText(Windows.UI.Text.TextSetOptions.None, System.DateTime.Now.ToString() + " ");
+
+                    int selectionPoint = MainTextBox.Document.Selection.EndPosition;
+                    MainTextBox.Document.Selection.SetRange(selectionPoint, selectionPoint);
+                    MainTextBox.Focus(FocusState.Keyboard);
+
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+                }
+                else if(e.Key == Windows.System.VirtualKey.V)
+                {
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+
+                    MainTextBox.FontFamily = new FontFamily("Consolas");
+                    MainTextBox.FontSize = 14;
+
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+                }
+                else if(e.Key == Windows.System.VirtualKey.X)
+                {
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+                }
+                else if (e.Key == Windows.System.VirtualKey.Z)
+                {
+                    textChanged = true;
+                    isCurrentFileSaved = false;
+
+                    if (isCurrentFileSavedString == "")
+                    {
+                        isCurrentFileSavedString = "*";
+                        updateTitle();
+                    }
+                }
+                else if (e.Key == Windows.System.VirtualKey.W)
+                {
+                    await CloseFile();
+                    isCtrlKeyPressed = false;
+                }
+                else if (e.Key == Windows.System.VirtualKey.Q)
+                {
+                    if(await CloseFile())
+                    {
+                        Application.Current.Exit();
+                    }
+
+                    isCtrlKeyPressed = false;
                 }
             }   
         }
@@ -562,6 +720,112 @@ namespace Notepad3000
                 Application.Current.Exit();
             }
             
+        }
+
+        private void UndoClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.Undo();
+
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+        }
+
+        private void CutClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.Selection.Cut();
+
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+        }
+
+        private void CopyClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.Selection.Copy();
+        }
+
+        private void PasteClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.Selection.Paste(1);
+
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+        }
+
+        private void DateTimeClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.Selection.SetText(Windows.UI.Text.TextSetOptions.None, System.DateTime.Now.ToString() + " ");
+
+            int selectionPoint = MainTextBox.Document.Selection.EndPosition;
+            MainTextBox.Document.Selection.SetRange(selectionPoint, selectionPoint);
+            MainTextBox.Focus(FocusState.Keyboard);
+
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+        }
+
+        private void SelectAllClicked(object sender, RoutedEventArgs e)
+        {
+            string text = "";
+            MainTextBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
+
+            MainTextBox.Document.Selection.SetRange(0, text.Length - 1);
+
+            //MainTextBox.Focus(FocusState.Keyboard);
+        }
+
+        private void ClearClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+        }
+
+        private void ContentPasted(object sender, TextControlPasteEventArgs e)
+        {
+            MainTextBox.FontFamily = new FontFamily("Consolas");
+            MainTextBox.FontSize = 14;
+        }
+
+        private void WordWrapToggled(object sender, RoutedEventArgs e)
+        {
+            if(MainTextBox.TextWrapping == TextWrapping.Wrap)
+            {
+                MainTextBox.TextWrapping = TextWrapping.NoWrap;
+            }
+            else
+            {
+                MainTextBox.TextWrapping = TextWrapping.Wrap;
+            }
         }
     }
 }

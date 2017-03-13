@@ -29,7 +29,7 @@ namespace Notepad3000
         /// </summary>
         /// 
 
-        public bool appFinishedLoading = false;
+        public static bool appFinishedLoading = false;
 
         //Custom method for setting the main TitleBar color
         private void SetBackgroundTitleBar()

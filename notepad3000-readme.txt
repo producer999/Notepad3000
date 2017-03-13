@@ -5,14 +5,36 @@ Legend:
 
 Next:
 
--****create keyboard shortcuts for select all, close file, time/date, exit program
+-****add Font button functionality
+-****fix MainTextBox resizing lag when resizing program vertically
 -****figure out how to integrate scrolling (and word wrap) with the InkCanvas
+-****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
+-****check if you want to save file if you click the application window X to exit (may not be possible)
+-****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
--****when Save As an existing file, put the current file name in the FilePicker suggestion
--****give focus to the RichEditBox after selecting New/Close/open/save/save as
--****add cut to Edit menu
--****add time/date to edit menu
-	-****add functionality to Edit menu (undo, cut, copy, paste, select all, time/date)
+
+
+v0.02.01 (3/12/2017)
+
+-give focus to the RichEditBox after program start up by giving is TabIndex = 0
+-add time/date to edit menu
+	-add date/time functionality to Edit menu
+	-create keyboard shortcut for date/time
+-fix file save flags not updating when pasting text with control-v and edit->paste
+-create keyboard shortcuts for close file
+-create keyboard shortcut for exit program
+-when Save As an existing file, put the current file name in the FilePicker suggestion
+-prevent keyboard focus from leaving MainTextBox when menu is clicked
+-move cursor to end of datetime after insertion so you can continue to type
+-add clear to Edit menu and add functionailty
+-add functionality to Edit menu (undo, cut, copy, paste) 
+-add select all functionality to Edit menu
+-changed Font under Format menu to Word Wrap ToggleMenuFlyoutItem with IsChecked = True
+-implemented word wrap on/off with the Click event of the Format menu button and MainTextBox.TextWrapping
+~~~when pasting from outside the program convert all text to the same font, size and color using Paste event
+	~~~this kind of works but it behaves differently depending on whether Paste is selected from menu or Control-V is pressed
+-fixed bug isCntlKeyPressed flag not setting to false after Cntl-W, Cntl-S when MessageDialog appears
+-changed min build to Windows 10 Anniversary in Project-Properties to support AllowFocusOnInteraction = False
 
 
 v0.01.05 (3/10/2017)
@@ -58,7 +80,7 @@ v.01.03 (3/8/17)
 -Decrease BorderThickness on RichEditBox to 1
 -Add MenuFlyOut to each menu button with options
 	-fix positioning of menu Button Flyouts
--Connect GitHub to projectd
+-Connect GitHub to project
 -add basic event functionality for New button
 
 
@@ -86,13 +108,47 @@ v.01.01
 _________________________________________________________________________________________________
 BUGS:
 
+
+Bug: Open File -> highlight text -> Hit Control-X
+	result: cut works as expected but file save flags are not updated and it thinks the file hasnt been changed
+	expected: isFileSaved = false, textChanged = true
+	fix suggestion: this may be calling OnKeyDown() instead of KeyDown()
+
+Bug: Open File -> type or delete text -> Hit Control-Z
+	result: undo works as expected but file save flags are not updated and it thinks the file hasnt been changed
+	expected: isFileSaved = false, textChanged = true
+	fix suggestion: this may be calling OnKeyDown() instead of KeyDown()
+
+Bug: Hit Control-Q
+	result: nothing happens
+	expected: application checks to save file, closes file and exits application
+	fix suggestion: this may be calling OnKeyDown() instead of KeyDown()
+
+Bug: Resize application window vertically
+	result: the MainTextBox resizes slowly and lags behind the grid resize
+	expected: no lag when redrawing RichEditBox
+
+_______________
+
 Improved Bug: Repeatedly Save by pressing Ctrl-S
 	result: UnauthorizedAccess exception
 	expected: no exception
 	improved: v0.01.05
-	improve notes: repeatedly saving doesn't automatically trigger it thought it comes up sometimes randomly
+	improved notes: repeatedly saving doesn't automatically trigger it thought it comes up sometimes randomly
 
 _______________
+
+Potentially Fixed Bug: Open -> select file -> change text -> Hit Control-W -> Hit Cancel
+     Open -> select file -> change text -> Hit Control-S -> Hit Cancel
+	result: controlPressed flag gets stuck on and pressing S or W with no shift activates the shortcuts
+	result notes: this also causes additional unwanted behavior:
+		-save flags dont get set correctly when typing other characters
+		-it is possible to unexpectedly close an unsaved file by pressing W or Q
+	expected: typing coninues normally as if control is no longer pressed
+	fix suggestion: KeyUp event never fires when releasing shift after the MessageDialog has focus
+	potentially fixed: v.0.02.01
+	fixed:
+	fix notes: manually set isCntlKeyPressed to fasle on all shortcuts that can bring up a MessageDialog
 
 Potentially Fixed Bug: New -> type -> New -> Save -> Cancel
 	result: clears text anyway

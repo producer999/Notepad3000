@@ -10,10 +10,10 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0"  Background="Azure">
+        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0"  Background="Azure" AllowFocusOnInteraction="False">
             <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
@@ -30,13 +30,15 @@
             <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem Text="Undo" />
+                        <MenuFlyoutItem Text="Undo" Click="UndoClicked" />
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Cut" />
-                        <MenuFlyoutItem Text="Copy" />
-                        <MenuFlyoutItem Text="Paste" />
+                        <MenuFlyoutItem Text="Cut" Click="CutClicked" />
+                        <MenuFlyoutItem Text="Copy" Click="CopyClicked" />
+                        <MenuFlyoutItem Text="Paste" Click="PasteClicked" />
+                        <MenuFlyoutItem Text="Clear" Click="ClearClicked" />
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Select All" />
+                        <MenuFlyoutItem Text="Date/Time" Click="DateTimeClicked" />
+                        <MenuFlyoutItem Text="Select All" Click="SelectAllClicked" />
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
@@ -44,7 +46,7 @@
            
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
-                        <MenuFlyoutItem Text="Font" />
+                        <ToggleMenuFlyoutItem Text="Word Warp" Click="WordWrapToggled" IsChecked="True"/>
                     </MenuFlyout>
                 </Button.Flyout>
             
@@ -60,18 +62,29 @@
          
             </Button>
         </StackPanel>
-   
-        <RichEditBox x:Name="MainTextBox"
-                     Grid.Row="1"
+    
+            <RichEditBox x:Name="MainTextBox"
+                   
                      FontFamily="Consolas" 
                      FontSize="14" 
+                     Grid.Row="1"
+                     VerticalAlignment="Stretch"
+                     Height="Auto"
                      IsSpellCheckEnabled="False" 
                      BorderThickness="1" 
+                     TabIndex="0"
+                  
                      ScrollViewer.IsVerticalRailEnabled="True"
                      ScrollViewer.VerticalScrollMode="Auto"
                      ScrollViewer.IsHorizontalRailEnabled="True"
                      ScrollViewer.HorizontalScrollMode="Auto"
-                     KeyDown="TabKeyDown"  />
+         
+                 
+                     KeyDown="TabKeyDown" Paste="ContentPasted"  />
+            
+ 
+        
+                     
 
     </Grid>
 </Page>
