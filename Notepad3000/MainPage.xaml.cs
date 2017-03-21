@@ -43,7 +43,7 @@ namespace Notepad3000
         {
             this.InitializeComponent();
 
-          
+         
         }
 
         public void updateTitle()

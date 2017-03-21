@@ -9,11 +9,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-       <Grid.RowDefinitions>
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0"  Background="Azure" AllowFocusOnInteraction="False">
+            
             <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
@@ -27,6 +28,7 @@
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
+            
             <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
@@ -42,49 +44,48 @@
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
+            
             <Button x:Name="FormatButton" Content="Format" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
-           
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <ToggleMenuFlyoutItem Text="Word Warp" Click="WordWrapToggled" IsChecked="True"/>
                     </MenuFlyout>
                 </Button.Flyout>
-            
-                
             </Button>
+            
             <Button x:Name="HelpButton" Content="Help" Click="MenuButtonClicked" Padding="3,1" Background="Azure">
-               
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="About" Click="AboutClicked" />
                     </MenuFlyout>
                 </Button.Flyout>
-         
             </Button>
         </StackPanel>
-    
-            <RichEditBox x:Name="MainTextBox"
+      
+        <RichEditBox x:Name="MainTextBox"
                    
-                     FontFamily="Consolas" 
-                     FontSize="14" 
-                     Grid.Row="1"
-                     VerticalAlignment="Stretch"
-                     Height="Auto"
-                     IsSpellCheckEnabled="False" 
-                     BorderThickness="1" 
-                     TabIndex="0"
-                  
-                     ScrollViewer.IsVerticalRailEnabled="True"
-                     ScrollViewer.VerticalScrollMode="Auto"
-                     ScrollViewer.IsHorizontalRailEnabled="True"
-                     ScrollViewer.HorizontalScrollMode="Auto"
-         
-                 
-                     KeyDown="TabKeyDown" Paste="ContentPasted"  />
-            
- 
-        
+            FontFamily="Consolas" 
+            FontSize="14" 
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
                      
+            IsSpellCheckEnabled="False" 
+            BorderThickness="1" 
+            TabIndex="0"
+                  
+            ScrollViewer.IsVerticalRailEnabled="True"
+            ScrollViewer.VerticalScrollMode="Auto"
+            ScrollViewer.IsHorizontalRailEnabled="True"
+            ScrollViewer.HorizontalScrollMode="Auto"
+        
+            KeyDown="TabKeyDown"
+            Paste="ContentPasted"  />
+
+        <InkCanvas Grid.Row="1"
+                   AllowFocusOnInteraction="False"
+                   
+                   />
 
     </Grid>
 </Page>

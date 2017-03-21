@@ -13,6 +13,10 @@ Next:
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
 
+v0.03.01 (3/20/2017)
+
+-add InkCavnas and set AllowFocusOnInteraction to false to prevent keyboard focus
+
 
 v0.02.01 (3/12/2017)
 
