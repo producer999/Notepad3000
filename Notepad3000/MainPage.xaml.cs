@@ -392,7 +392,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.02.01 3/12/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.04.01 3/26/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
@@ -826,6 +826,43 @@ namespace Notepad3000
             {
                 MainTextBox.TextWrapping = TextWrapping.Wrap;
             }
+        }
+
+        private void inkToolBar_Loading(FrameworkElement sender, object args)
+        {
+            inkToolBar.InitialControls = InkToolbarInitialControls.None;
+
+            InkToolbarBallpointPenButton bpp = new InkToolbarBallpointPenButton();
+            InkToolbarHighlighterButton hl = new InkToolbarHighlighterButton();
+
+            SolidColorBrush brush = new SolidColorBrush(Colors.Transparent);
+
+            bpp.Background = brush;  
+            hl.Background = brush;
+            
+            inkToolBar.Children.Add(bpp);
+            inkToolBar.Children.Add(hl);
+
+        }
+
+        private void inkErase_Clicked(object sender, RoutedEventArgs e)
+        {
+            MainInkBox.InkPresenter.StrokeContainer.Clear();
+        }
+
+        private void AllClearClicked(object sender, RoutedEventArgs e)
+        {
+            MainTextBox.Document.SetText(Windows.UI.Text.TextSetOptions.None, "");
+            textChanged = true;
+            isCurrentFileSaved = false;
+
+            if (isCurrentFileSavedString == "")
+            {
+                isCurrentFileSavedString = "*";
+                updateTitle();
+            }
+
+            MainInkBox.InkPresenter.StrokeContainer.Clear();
         }
     }
 }

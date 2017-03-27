@@ -37,7 +37,9 @@
                         <MenuFlyoutItem Text="Cut" Click="CutClicked" />
                         <MenuFlyoutItem Text="Copy" Click="CopyClicked" />
                         <MenuFlyoutItem Text="Paste" Click="PasteClicked" />
-                        <MenuFlyoutItem Text="Clear" Click="ClearClicked" />
+                        <MenuFlyoutItem Text="Clear Text" Click="ClearClicked" />
+                        <MenuFlyoutItem Text="Clear Ink" Click="inkErase_Clicked" />
+                        <MenuFlyoutItem Text="Clear All" Click="AllClearClicked" />
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Text="Date/Time" Click="DateTimeClicked" />
                         <MenuFlyoutItem Text="Select All" Click="SelectAllClicked" />
@@ -84,8 +86,19 @@
 
         <InkCanvas Grid.Row="1"
                    AllowFocusOnInteraction="False"
-                   
+                   IsHitTestVisible="False"
+                   x:Name="MainInkBox"
                    />
+        <InkToolbar Grid.Row="0"
+                    x:Name="inkToolBar"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    AllowFocusOnInteraction="False"
+                    TargetInkCanvas="{x:Bind MainInkBox}" 
+                    Loading="inkToolBar_Loading"  
+                    
+                    />
+
 
     </Grid>
 </Page>

@@ -6,12 +6,30 @@ Legend:
 Next:
 
 -****add Font button functionality
+-****change InkToolbar height to match menu items (use other Control besides InkToolbar?)
+-****change InkToolbar hover colors (use other Control besides InkToolbar?)
+-****prevent the ability to draw ink outside of the application border
+-****make sure the mouse doesnt become a text cursor when the pen hovers over the RichEditBox
+-****make Undo undo a whole word at a time instead of just 1 character
 -****fix MainTextBox resizing lag when resizing program vertically
 -****figure out how to integrate scrolling (and word wrap) with the InkCanvas
 -****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
 -****check if you want to save file if you click the application window X to exit (may not be possible)
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
+
+
+v0.04.01 (3/26/2017)
+
+-Clear Ink menu option in Edit menu
+-Clear All menu option in Edit Menu
+-make it so that InkCanvas does not get mouse or touch focus by setting IsHitTestVisible = False
+-set AllowFocusOnInteraction to False for InkToolbar so it doesnt take keyboard focus away from the MainTextBox
+-add selector for pen and highlighter on top right
+	-move InkToolbar to right side of menu bar
+-change InkToolbar background color
+
+
 
 v0.03.01 (3/20/2017)
 
