@@ -43,7 +43,7 @@ namespace Notepad3000
         {
             this.InitializeComponent();
 
-         
+           // MainInkBox.InkPresenter.
         }
 
         public void updateTitle()
@@ -392,7 +392,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.04.01 3/26/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.06.01 4/9/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
@@ -843,6 +843,8 @@ namespace Notepad3000
             inkToolBar.Children.Add(bpp);
             inkToolBar.Children.Add(hl);
 
+            //inkToolBar.Opacity = .5;
+
         }
 
         private void inkErase_Clicked(object sender, RoutedEventArgs e)
@@ -863,6 +865,33 @@ namespace Notepad3000
             }
 
             MainInkBox.InkPresenter.StrokeContainer.Clear();
+        }
+
+        private void Main_Scroll_Changed(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            ScrollViewer scrolled = sender as ScrollViewer;
+
+            inkScroll.ScrollToVerticalOffset(scrolled.VerticalOffset);
+
+        }
+
+        private void Toolbar_MouseEnter(object sender, PointerRoutedEventArgs e)
+        {
+            //inkToolBar.Opacity = 1;
+        }
+
+        private void Toolbar_MouseExit(object sender, PointerRoutedEventArgs e)
+        {
+            //inkToolBar.Opacity = .5;
+         
+        }
+
+        private void MainTextBox_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            //if(e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            //{
+                //Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Cross,1);
+            //}
         }
     }
 }

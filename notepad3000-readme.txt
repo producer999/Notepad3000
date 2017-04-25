@@ -6,17 +6,29 @@ Legend:
 Next:
 
 -****add Font button functionality
--****change InkToolbar height to match menu items (use other Control besides InkToolbar?)
 -****change InkToolbar hover colors (use other Control besides InkToolbar?)
 -****prevent the ability to draw ink outside of the application border
 -****make sure the mouse doesnt become a text cursor when the pen hovers over the RichEditBox
 -****make Undo undo a whole word at a time instead of just 1 character
--****fix MainTextBox resizing lag when resizing program vertically
--****figure out how to integrate scrolling (and word wrap) with the InkCanvas
+-****fix MainTextBox resizing lag when resizing program vertically (bug?)
 -****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
 -****check if you want to save file if you click the application window X to exit (may not be possible)
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
+
+
+v.06.01 (4/9/17)
+
+-Integrated scrolling between the MainTextBox and InkCanvas by using an invisible RichEditBox helper inside a ScrollViewer with the InkCanvas that binds all text (and scrolling) of the MainTextBox
+-add Ink menu button on right hand side with drop down containing the InkToolbar
+-****set default pen thickness to 2
+-****add mouse over functionality on menu items, close the previous one and open the current
+-****adjust InkCanvas so it doesnt visibly alter curves when writing
+
+
+v.05.01 (3/27/2017)
+
+-put RichEditBox and InkCanvas inside the same ScrollViewer
 
 
 v0.04.01 (3/26/2017)
