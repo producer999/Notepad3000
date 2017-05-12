@@ -1,18 +1,64 @@
 # Notepad3000
 Notepad3000 is a lightweight Windows 10 notepad app with drawing capability that I'm making for myself. 
 
+Notepad3000
+
 Legend:
 **** = planned feature/fix for next release/commit
 
 Next:
 
--****add Font button functionality
--****fix MainTextBox resizing lag when resizing program vertically
--****figure out how to integrate scrolling (and word wrap) with the InkCanvas
+-****clean up code
+-****add Font size functionality
+-****make sure the mouse doesnt become a text cursor when the pen hovers over the RichEditBox
+-****add mouse over functionality on menu items, close the previous one and open the current
+
+-****make Undo undo a whole word at a time instead of just 1 character
+-****prevent the ability to draw ink outside of the application border
 -****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
--****check if you want to save file if you click the application window X to exit (may not be possible)
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
+-****add ability to save ink strokes along with the text
+-****adjust InkCanvas so it doesnt visibly alter curves when writing
+-****fix MainTextBox resizing lag when resizing program vertically (bug?)
+-****check if you want to save file if you click the application window X to exit (may not be possible)
+-****prevent the extra scroll pull down/up when it's scrolled all the way (inertia) (may not be possible)
+
+v.06.02 (5/11/17)
+
+-set default pen thickness to 2
+-fix file->close keeps the ink on the screen
+-fix file->new keeps the ink on the screen
+-fix enter/whitespace doesnt count as character (doesnt trigger scrolling of the ink) - use TextGetOptions.FormatRtf in RichEditBoxExtended
+
+
+v.06.01 (4/9/17)
+
+-Integrated scrolling between the MainTextBox and InkCanvas by using an invisible RichEditBox helper inside a ScrollViewer with the InkCanvas that binds all text (and scrolling) of the MainTextBox
+-add Ink menu button on right hand side with drop down containing the InkToolbar
+
+
+
+v.05.01 (3/27/2017)
+
+-put RichEditBox and InkCanvas inside the same ScrollViewer
+
+
+v0.04.01 (3/26/2017)
+
+-Clear Ink menu option in Edit menu
+-Clear All menu option in Edit Menu
+-make it so that InkCanvas does not get mouse or touch focus by setting IsHitTestVisible = False
+-set AllowFocusOnInteraction to False for InkToolbar so it doesnt take keyboard focus away from the MainTextBox
+-add selector for pen and highlighter on top right
+	-move InkToolbar to right side of menu bar
+-change InkToolbar background color
+
+
+
+v0.03.01 (3/20/2017)
+
+-add InkCavnas and set AllowFocusOnInteraction to false to prevent keyboard focus
 
 
 v0.02.01 (3/12/2017)
@@ -166,3 +212,4 @@ Potentially Fixed Bug: New -> Open -> choose a file -> type text -> New -> Save
 	fix notes: SaveCurrentFile() was not awaitable and under New the CurrentFile = null call would occur before the Save was complete. Made SaveCurrentFile() retuen Task<bool> fixed it.
 
 _______________
+

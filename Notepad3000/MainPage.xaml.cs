@@ -141,6 +141,7 @@ namespace Notepad3000
                             textChanged = false;
                             isCurrentFileSaved = false;
                             CurrentFile = null;
+                            MainInkBox.InkPresenter.StrokeContainer.Clear();
                             isCurrentFileSavedString = "";
                             updateTitle();
 
@@ -154,6 +155,7 @@ namespace Notepad3000
                                 textChanged = false;
                                 isCurrentFileSaved = false;
                                 CurrentFile = null;
+                                MainInkBox.InkPresenter.StrokeContainer.Clear();
                                 isCurrentFileSavedString = "";
                                 updateTitle();
 
@@ -167,6 +169,7 @@ namespace Notepad3000
                         textChanged = false;
                         isCurrentFileSaved = false;
                         CurrentFile = null;
+                        MainInkBox.InkPresenter.StrokeContainer.Clear();
                         isCurrentFileSavedString = "";
                         updateTitle();
 
@@ -184,6 +187,7 @@ namespace Notepad3000
                     isCurrentFileSaved = false;
                     textChanged = false;
                     CurrentFile = null;
+                    MainInkBox.InkPresenter.StrokeContainer.Clear();
                     isCurrentFileSavedString = "";
                     updateTitle();
 
@@ -343,6 +347,7 @@ namespace Notepad3000
                             textChanged = false;
                             isCurrentFileSaved = false;
                             CurrentFile = null;
+                            MainInkBox.InkPresenter.StrokeContainer.Clear();
                             isCurrentFileSavedString = "";
                             updateTitle();
                         }
@@ -354,6 +359,7 @@ namespace Notepad3000
                                 textChanged = false;
                                 isCurrentFileSaved = false;
                                 CurrentFile = null;
+                                MainInkBox.InkPresenter.StrokeContainer.Clear();
                                 isCurrentFileSavedString = "";
                                 updateTitle();
                             }
@@ -365,12 +371,13 @@ namespace Notepad3000
                         textChanged = false;
                         isCurrentFileSaved = false;
                         CurrentFile = null;
+                        MainInkBox.InkPresenter.StrokeContainer.Clear();
                         isCurrentFileSavedString = "";
                         updateTitle();
                     }
                     else
                     {
-
+                        //USER HAS CANCELLED THE FILE-> NEW OPERATION, DO NOTHING
                     }
 
                 }
@@ -380,6 +387,7 @@ namespace Notepad3000
                     isCurrentFileSaved = false;
                     textChanged = false;
                     CurrentFile = null;
+                    MainInkBox.InkPresenter.StrokeContainer.Clear();
                     isCurrentFileSavedString = "";
                     updateTitle();
                 }
@@ -392,7 +400,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.06.01 4/9/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.06.02 5/11/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)
@@ -425,7 +433,7 @@ namespace Notepad3000
                     }
                     else
                     {
-
+                        //USER HAS CANCELLED THE FILE->OPEN OPERATION, DO NOTHING
                     }                   
                 }
                 else
@@ -457,6 +465,7 @@ namespace Notepad3000
                             textChanged = false;
                             isCurrentFileSaved = false;
                             CurrentFile = null;
+                            MainInkBox.InkPresenter.StrokeContainer.Clear();
                             isCurrentFileSavedString = "";
                             updateTitle();
                         }
@@ -468,6 +477,7 @@ namespace Notepad3000
                                 textChanged = false;
                                 isCurrentFileSaved = false;
                                 CurrentFile = null;
+                                MainInkBox.InkPresenter.StrokeContainer.Clear();
                                 isCurrentFileSavedString = "";
                                 updateTitle();
                             }
@@ -479,12 +489,13 @@ namespace Notepad3000
                         textChanged = false;
                         isCurrentFileSaved = false;
                         CurrentFile = null;
+                        MainInkBox.InkPresenter.StrokeContainer.Clear();
                         isCurrentFileSavedString = "";
                         updateTitle();
                     }
                     else
                     {
-
+                        //USER HAS CANCELLED THE FILE->CLOSE OPERATION, DO NOTHING
                     }
 
                 }
@@ -494,6 +505,7 @@ namespace Notepad3000
                     isCurrentFileSaved = false;
                     textChanged = false;
                     CurrentFile = null;
+                    MainInkBox.InkPresenter.StrokeContainer.Clear();
                     isCurrentFileSavedString = "";
                     updateTitle();
                 }
@@ -808,6 +820,8 @@ namespace Notepad3000
                 isCurrentFileSavedString = "*";
                 updateTitle();
             }
+
+
         }
 
         private void ContentPasted(object sender, TextControlPasteEventArgs e)
@@ -837,7 +851,8 @@ namespace Notepad3000
 
             SolidColorBrush brush = new SolidColorBrush(Colors.Transparent);
 
-            bpp.Background = brush;  
+            bpp.Background = brush;
+            bpp.SelectedStrokeWidth = 2;
             hl.Background = brush;
             
             inkToolBar.Children.Add(bpp);
@@ -888,10 +903,12 @@ namespace Notepad3000
 
         private void MainTextBox_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            //if(e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
-            //{
-                //Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Cross,1);
-            //}
+            /*
+            if(e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            {
+                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Cross,1);
+            }
+            */
         }
     }
 }

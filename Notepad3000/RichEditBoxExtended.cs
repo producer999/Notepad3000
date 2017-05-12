@@ -33,14 +33,14 @@ namespace Notepad3000
             {
                 _lockChangeExecution = true;
                 string text;
-                Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
+                Document.GetText(Windows.UI.Text.TextGetOptions.FormatRtf, out text);
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     RtfText = "";
                 }
                 else
                 {
-                    Document.GetText(Windows.UI.Text.TextGetOptions.None, out text);
+                    Document.GetText(Windows.UI.Text.TextGetOptions.FormatRtf, out text);
                     RtfText = text;
                 }
                 _lockChangeExecution = false;
@@ -55,7 +55,7 @@ namespace Notepad3000
             if (!rtb._lockChangeExecution)
             {
                 rtb._lockChangeExecution = true;
-                rtb.Document.SetText(Windows.UI.Text.TextSetOptions.None, rtb.RtfText);
+                rtb.Document.SetText(Windows.UI.Text.TextSetOptions.FormatRtf, rtb.RtfText);
                 rtb._lockChangeExecution = false;
             }
         }

@@ -192,7 +192,7 @@
             ScrollViewer.HorizontalScrollMode="Auto"
         
             KeyDown="TabKeyDown"
-            Paste="ContentPasted" Style="{StaticResource MainTextBoxStyle1}" PointerEntered="MainTextBox_PointerEntered"  />
+            Paste="ContentPasted" Style="{StaticResource MainTextBoxStyle1}"  />
 
         <ScrollViewer Grid.Row="1" 
                       x:Name="inkScroll" 
@@ -205,13 +205,12 @@
                                            Opacity="0"
                                            IsHitTestVisible="False"
                                            RtfText="{x:Bind MainTextBox.RtfText, Mode=OneWay}"
-                                          >
-                </local:RichEditBoxExtended>
+                                          />
 
                 <InkCanvas
                        AllowFocusOnInteraction="False"
                        IsHitTestVisible="False"
-                       x:Name="MainInkBox"
+                       x:Name="MainInkBox" PointerEntered="MainTextBox_PointerEntered"
                        
                        />
             </Grid>

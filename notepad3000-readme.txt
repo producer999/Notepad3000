@@ -5,25 +5,35 @@ Legend:
 
 Next:
 
--****add Font button functionality
--****change InkToolbar hover colors (use other Control besides InkToolbar?)
--****prevent the ability to draw ink outside of the application border
+-****clean up code
+-****add Font size functionality
 -****make sure the mouse doesnt become a text cursor when the pen hovers over the RichEditBox
+-****add mouse over functionality on menu items, close the previous one and open the current
+
 -****make Undo undo a whole word at a time instead of just 1 character
--****fix MainTextBox resizing lag when resizing program vertically (bug?)
+-****prevent the ability to draw ink outside of the application border
 -****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
--****check if you want to save file if you click the application window X to exit (may not be possible)
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
+-****add ability to save ink strokes along with the text
+-****adjust InkCanvas so it doesnt visibly alter curves when writing
+-****fix MainTextBox resizing lag when resizing program vertically (bug?)
+-****check if you want to save file if you click the application window X to exit (may not be possible)
+-****prevent the extra scroll pull down/up when it's scrolled all the way (inertia) (may not be possible)
+
+v.06.02 (5/11/17)
+
+-set default pen thickness to 2
+-fix file->close keeps the ink on the screen
+-fix file->new keeps the ink on the screen
+-fix enter/whitespace doesnt count as character (doesnt trigger scrolling of the ink) - use TextGetOptions.FormatRtf in RichEditBoxExtended
 
 
 v.06.01 (4/9/17)
 
 -Integrated scrolling between the MainTextBox and InkCanvas by using an invisible RichEditBox helper inside a ScrollViewer with the InkCanvas that binds all text (and scrolling) of the MainTextBox
 -add Ink menu button on right hand side with drop down containing the InkToolbar
--****set default pen thickness to 2
--****add mouse over functionality on menu items, close the previous one and open the current
--****adjust InkCanvas so it doesnt visibly alter curves when writing
+
 
 
 v.05.01 (3/27/2017)
