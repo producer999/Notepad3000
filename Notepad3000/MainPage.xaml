@@ -108,9 +108,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0"  Background="Azure" AllowFocusOnInteraction="False">
+        <StackPanel Orientation="Horizontal" Height="Auto" Grid.Row="0"  Background="#FF444444" 
+                    AllowFocusOnInteraction="False">
 
-            <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
+            <Button x:Name="FileButton" Content="File" Click="MenuButtonClicked" Padding="3,1" 
+                    Foreground="WhiteSmoke" Background="#FF444444" FontFamily="Calibri">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="New" Click="NewClicked" />
@@ -124,7 +126,8 @@
                 </Button.Flyout>
             </Button>
 
-            <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
+            <Button x:Name="EditButton" Content="Edit" Click="MenuButtonClicked" Padding="3,1" 
+                    Foreground="WhiteSmoke" Background="#FF444444" FontFamily="Calibri">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="Undo" Click="UndoClicked" />
@@ -142,7 +145,8 @@
                 </Button.Flyout>
             </Button>
 
-            <Button x:Name="FormatButton" Content="Format" Click="MenuButtonClicked" Padding="3,1"  Background="Azure">
+            <Button x:Name="FormatButton" Content="Format" Click="MenuButtonClicked" Padding="3,1" 
+                    Foreground="WhiteSmoke" Background="#FF444444" FontFamily="Calibri">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <ToggleMenuFlyoutItem Text="Word Warp" Click="WordWrapToggled" IsChecked="True"/>
@@ -150,7 +154,8 @@
                 </Button.Flyout>
             </Button>
 
-            <Button x:Name="HelpButton" Content="Help" Click="MenuButtonClicked" Padding="3,1" Background="Azure">
+            <Button x:Name="HelpButton" Content="Help" Click="MenuButtonClicked" Padding="3,1" 
+                    Foreground="WhiteSmoke" Background="#FF444444" FontFamily="Calibri">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <MenuFlyoutItem Text="About" Click="AboutClicked" />
@@ -159,8 +164,8 @@
             </Button>
         </StackPanel>
 
-        <Button x:Name="inkOptionsButton" Content="Ink" Padding="13,1" Background="DarkBlue" Foreground="White"
-                HorizontalAlignment="Right">
+        <Button x:Name="inkOptionsButton" Content="Ink" Padding="13,1" Background="#FFFFEE00" Foreground="#FF262626"
+                HorizontalAlignment="Right" FontFamily="Calibri">
             <Button.Flyout>
                 <Flyout>
                     <InkToolbar x:Name="inkToolBar"

@@ -15,11 +15,16 @@ Next:
 -****update file save flags when Control-Z, Control-X is pressed (requires some work - override OnKeyPressed)
 -****fix pasting from another document different using Paste menu or Cntl-V
 -****save a version of every file that is opening from disk locally as its opened to protect loss
+	-****autosave the text and ink after each change and when suspending and reload on opening/unsuspending
 -****add ability to save ink strokes along with the text
 -****adjust InkCanvas so it doesnt visibly alter curves when writing
 -****fix MainTextBox resizing lag when resizing program vertically (bug?)
 -****check if you want to save file if you click the application window X to exit (may not be possible)
 -****prevent the extra scroll pull down/up when it's scrolled all the way (inertia) (may not be possible)
+
+v.07.01 (6/3/17) First Build
+-set color scheme to sourceleven for title bar, menu bar
+
 
 v.06.02 (5/11/17)
 

@@ -400,7 +400,7 @@ namespace Notepad3000
 
         private async void AboutClicked(object sender, RoutedEventArgs e)
         {
-            await Confirm("\n\u00A9 2017 The Architect\n\nVersion: 0.06.02 5/11/2017", "About Notepad3000", "OK"); 
+            await Confirm("\n\u00A9 2017 sourcEleven\n\nVersion: 0.07.01 6/03/2017", "About Notepad3000", "OK"); 
         }
 
         private async void OpenClicked(object sender, RoutedEventArgs e)

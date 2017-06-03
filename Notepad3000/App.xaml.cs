@@ -38,11 +38,14 @@ namespace Notepad3000
             var titleBar = appview.TitleBar;
 
             appview.Title = "Untitled" + MainPage.isCurrentFileSavedString;
-            titleBar.BackgroundColor = Colors.DarkSlateBlue;
-            titleBar.ForegroundColor = Colors.WhiteSmoke;
-            titleBar.ButtonBackgroundColor = Colors.DarkSlateBlue;
-            titleBar.ButtonForegroundColor = Colors.WhiteSmoke;
-        }
+            titleBar.BackgroundColor = Color.FromArgb(255, 38, 38, 38);
+            titleBar.ForegroundColor = Color.FromArgb(255, 255, 238, 0);
+            titleBar.ButtonBackgroundColor = Color.FromArgb(255, 38, 38, 38);
+            titleBar.ButtonForegroundColor = Color.FromArgb(255, 255, 238, 0);
+            titleBar.InactiveBackgroundColor = Color.FromArgb(255, 68, 68, 68);
+            titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 68, 68, 68);
+            titleBar.ButtonInactiveForegroundColor = Colors.WhiteSmoke;
+        } 
 
         public App()
         {

@@ -1,48 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
-
-  <Identity
-    Name="de1ae3b2-4ea9-4af4-ad42-c5f09fc4b7d9"
-    Publisher="CN=produ"
-    Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="de1ae3b2-4ea9-4af4-ad42-c5f09fc4b7d9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="de1ae3b2-4ea9-4af4-ad42-c5f09fc4b7d9" Publisher="CN=produ" Version="0.7.1.0" />
+  <mp:PhoneIdentity PhoneProductId="de1ae3b2-4ea9-4af4-ad42-c5f09fc4b7d9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Notepad3000</DisplayName>
-    <PublisherDisplayName>produ</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <PublisherDisplayName>sourcEleven</PublisherDisplayName>
+    <Logo>assets\tiles\Store\StoreLogo.png</Logo>
   </Properties>
-
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="Notepad3000.App">
-      <uap:VisualElements
-        DisplayName="Notepad3000"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Notepad3000"
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Notepad3000.App">
+      <uap:VisualElements DisplayName="Notepad3000" Square150x150Logo="assets\tiles\Medium\Medium150x150Logo.png" Square44x44Logo="assets\tiles\AppList\AppList.png" Description="Notepad3000 - A simple note taking app with drawing capability" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="assets\tiles\Wide\Wide310x150Logo.png" Square71x71Logo="assets\tiles\Small\Small71x71Logo.png" Square310x310Logo="assets\tiles\Large\Large310x310Logo.png">
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="assets\tiles\SplashScreen\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
   </Capabilities>
